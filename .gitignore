@@ -12,5 +12,8 @@
 *.lot
 *.run.xml
 
+# Excluir PDF generado localmente
+*.pdf
+
 # Configuración local de VS Code
 .vscode/
