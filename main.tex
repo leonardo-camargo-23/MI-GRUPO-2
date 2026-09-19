@@ -1,0 +1,60 @@
+%!TEX program = pdflatex
+\documentclass[12pt, letterpaper]{article}
+
+% --- MÁRGENES Y FORMATO ICONTEC (NTC 1486) ---
+\usepackage[top=3cm, bottom=3cm, left=4cm, right=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-tabla]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault} % Fuente Arial estándar NTC
+\usepackage{setspace}
+\onehalfspacing % Interlineado 1.5
+
+% --- PAQUETES DE TABLAS Y FIGURAS ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{labelsep=period, font=small}
+
+% --- BIBLIOGRAFÍA EN ESTILO IEEE ---
+\usepackage[backend=biber, style=ieee]{biblatex}
+\addbibresource{referencias.bib}
+
+% --- HIPERVÍNCULOS ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\begin{document}
+
+% 1. PRELIMINARES NTC 1486 (Sin dedicatoria ni agradecimientos)
+\pagestyle{empty}
+\input{capitulos/00-portada}
+\newpage
+
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+\tableofcontents
+\newpage
+
+\listoftables
+\newpage
+
+\listoffigures
+\newpage
+
+% 2. CUERPO DEL DOCUMENTO
+\input{capitulos/01-problema}
+\newpage
+\input{capitulos/02-secciones_futuras}
+\newpage
+
+% 3. REFERENCIAS BIBLIOGRÁFICAS (Estilo IEEE)
+\printbibliography[title={REFERENCIAS}]
+
+\end{document}
