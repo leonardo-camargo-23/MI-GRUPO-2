@@ -1,4 +1,6 @@
-# Archivos temporales de LaTeX
+# ==========================================
+# Archivos temporales y auxiliares de LaTeX
+# ==========================================
 *.aux
 *.bcf
 *.fls
@@ -12,8 +14,32 @@
 *.lot
 *.run.xml
 
-# Excluir PDF generado localmente
+# ==========================================
+# Archivos temporales de Bibliografía (BibTeX / Biber)
+# ==========================================
+*.bbl
+*.blg
+*-blx.bib
+
+# ==========================================
+# Otros temporales de compilación
+# ==========================================
+*.idx
+*.ind
+*.ilg
+*.nav
+*.snm
+*.vrb
+
+# ==========================================
+# Archivos de salida (PDF local)
+# ==========================================
 *.pdf
 
-# Configuración local de VS Code
-.vscode/
+# ==========================================
+# Configuración local de IDEs y Entornos
+# ==========================================
+.vscode/*
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
