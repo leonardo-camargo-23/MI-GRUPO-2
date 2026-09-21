@@ -17,6 +17,13 @@ De igual forma, la ineficiencia en el manejo de memoria principal se manifiesta 
 La carga completa en memoria de árboles DOM XML muy grandes puede multiplicar el consumo de RAM, provocar swapping y hacer que el documento no pueda procesarse; el riesgo se reduce mediante streaming o carga parcial \cite{dke_memory_2006}.
 Cuando la selección o el procesamiento de un formato aumenta el tiempo de respuesta, puede deteriorar la satisfacción del usuario; la aceptabilidad depende del contexto y debe medirse con usuarios o umbrales de servicio \cite{hoxmeier2000system}.
 
+Por otra parte, cuando el sistema debe operar en entornos de alta concurrencia, la contención en las operaciones de entrada y salida se convierte en un obstáculo severo para la escalabilidad. Bajo cargas concurrentes, la contención de E/S y las colas de solicitudes pueden aumentar significativamente la latencia; el efecto depende del almacenamiento, el patrón de acceso, el nivel de concurrencia y la configuración de buffers~\cite{cook2000asynchronous}.
+
+Los benchmarks y modelos de rendimiento realizados temprano pueden informar la selección de formatos y reducir el riesgo de decisiones arquitectónicas, siempre que se actualicen con cargas y mediciones representativas~\cite{smith2002performance}.
+
+Es por esto que generalizar el comportamiento del rendimiento para estos tres tipos de archivos en un experimento replicable bajo un entorno controlado nos genera información clave, útil y comprobable. La realización de experimentos sistemáticos enfocados en escenarios de lectura, escritura y concurrencia permitirá aislar el impacto real de cada estándar de almacenamiento frente a la saturación de memoria y procesador, aportando criterios técnicos fundamentados que prevengan la reestructuración tardía del código y garanticen una toma de decisiones eficiente desde las primeras etapas del desarrollo informático.
+
+
 \subsection{Descripción de la situación problemática}
 \textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
 
