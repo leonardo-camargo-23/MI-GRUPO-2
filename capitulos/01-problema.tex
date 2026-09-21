@@ -7,7 +7,15 @@ La persistencia y transmisión de datos son procesos fundamentales en el desarro
 
 El rendimiento de la transmisión de un archivo tiene distintas dimensiones de análisis, tales como rendimiento de lectura; rendimiento de escritura; tiempo de serialización/deserialización; tamaño del archivo; consumo de memoria; uso de CPU; entre otras, razón por la que en ocasiones se ignora cómo la elección entre distintos tipos de archivos afecta directamente la eficiencia general del programa, especialmente cuando este opera bajo condiciones críticas o restrictivas del sistema. Si el cliente identifica las falencias del programa una vez se realiza el despliegue o el equipo debe realizar gastos de alto costo en una etapa avanzada del proyecto, la falta de proyección de riesgos puede superar a los desarrolladores. En consecuencia, un análisis comparativo para la selección previa del tipo de documento que se debe usar en el desarrollo del sistema resulta invaluable para garantizar un flujo adecuado y óptimo del mismo.
 
+Actualmente, el uso de los archivos CSV, JSON y XML se encuentra ampliamente extendido en diferentes contextos de almacenamiento e intercambio de datos, lo que ha provocado que su uso estandarizado se vuelva objeto de estudio y análisis, enfocándose especialmente en la funcionalidad y el rendimiento \cite{ieee_icoailo_2025, ieee_les_2024}.
+A pesar de que la literatura abarca numerosos análisis técnicos y comprobables, aún existen áreas de investigación abiertas para el debate, dado que las variables únicas presentes durante el desarrollo de los sistemas requieren soluciones innovadoras y comprobables que respondan a escenarios concretos.
 
+La falta de claridad sobre el comportamiento de cada formato puede dificultar la identificación y anticipación de posibles cuellos de botella relacionados con el procesamiento de datos, especialmente bajo condiciones de alta carga y concurrencia.
+En archivos grandes o con estructuras sintácticamente complejas, el parseo puede elevar el consumo de CPU y degradar el rendimiento; la magnitud depende del formato, parser, estructura y estrategia de carga \cite{ieee_parsing_2008}.
+
+De igual forma, la ineficiencia en el manejo de memoria principal se manifiesta como un síntoma crítico derivado del modelo de representación utilizado por ciertos formatos.
+La carga completa en memoria de árboles DOM XML muy grandes puede multiplicar el consumo de RAM, provocar swapping y hacer que el documento no pueda procesarse; el riesgo se reduce mediante streaming o carga parcial \cite{dke_memory_2006}.
+Cuando la selección o el procesamiento de un formato aumenta el tiempo de respuesta, puede deteriorar la satisfacción del usuario; la aceptabilidad depende del contexto y debe medirse con usuarios o umbrales de servicio \cite{hoxmeier2000system}.
 
 \subsection{Descripción de la situación problemática}
 \textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
