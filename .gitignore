@@ -1,18 +1,45 @@
-# Archivos auxiliares y temporales de compilación de LaTeX
+# ==========================================
+# Archivos temporales y auxiliares de LaTeX
+# ==========================================
 *.aux
-*.fdb_latexmk
+*.bcf
 *.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
 *.log
 *.out
 *.toc
-*.bbl
-*.bcf
-*.blg
-*.xml
-*.synctex.gz
+*.lof
+*.lot
 *.run.xml
 
-# Archivos del sistema o del editor
+# ==========================================
+# Archivos temporales de Bibliografía (BibTeX / Biber)
+# ==========================================
+*.bbl
+*.blg
+*-blx.bib
+
+# ==========================================
+# Otros temporales de compilación
+# ==========================================
+*.idx
+*.ind
+*.ilg
+*.nav
+*.snm
+*.vrb
+
+# ==========================================
+# Archivos de salida (PDF local)
+# ==========================================
+*.pdf
+
+# ==========================================
+# Configuración local de IDEs y Entornos
+# ==========================================
+.vscode/*
+!.vscode/settings.json
 .DS_Store
 Thumbs.db
-.vscode/
