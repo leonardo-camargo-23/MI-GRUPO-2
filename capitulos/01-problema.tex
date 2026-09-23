@@ -32,4 +32,9 @@ Los benchmarks y modelos de rendimiento realizados temprano pueden informar la s
 \textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
 
 \subsection{Delimitación}
-\textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
+
+Este estudio se delimita a medir y comparar el rendimiento computacional —tiempos de lectura y escritura, uso de procesador, memoria RAM y velocidad de respuesta— de los formatos de archivo CSV, JSON y XML, comparando dos formas de procesarlos: la carga completa en memoria mediante el modelo DOM frente al procesamiento por partes o \textit{streaming} usando modelos como StAX o SAX, en un computador con características controladas durante el desarrollo del proyecto.
+
+Queda fuera del alcance la velocidad de internet o la red como factor explicativo —identificada como causa candidata pero filtrada en el Tema 2.1 por tener una correlación débil con la eficiencia interna del parseo y para enfocar el análisis en el rendimiento propio del formato—, así como el uso de sistemas de bases de datos y el análisis de la seguridad o encriptación de la información.
+
+Las decisiones sobre qué formato de archivo implementar en un proyecto ya se están tomando en el desarrollo de software sin evidencia técnica propia — cada programa que se construye sin este estudio es una decisión basada en la intuición, en un momento en que el manejo e intercambio de datos sigue creciendo de forma acelerada.
