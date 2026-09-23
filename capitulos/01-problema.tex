@@ -23,13 +23,15 @@ Los benchmarks y modelos de rendimiento realizados temprano pueden informar la s
 
 
 \subsection{Descripción de la situación problemática}
-\textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
+Como se documentó en los antecedentes [ver 1.1], los formatos CSV, JSON y XML se usan de forma masiva para guardar e intercambiar datos, en contextos donde el procesamiento de archivos grandes suele generar cuellos de botella y lentitud en entornos de alta concurrencia.
+
+Actualmente no existe un análisis comparativo y experimental sobre el rendimiento real de estos tres formatos —en tiempos de lectura, escritura, consumo de memoria RAM, uso de CPU y latencia bajo distintas estrategias de carga— en escenarios de alta demanda. Esta falta de evidencia afecta directamente a los desarrolladores y arquitectos de software, y obliga a que la elección del formato de archivo para un proyecto se tome por intuición o por costumbre, sin conocer sus verdaderos límites técnicos.
 
 \subsection{Formulación del problema}
 \textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
 
 \subsection{Consecuencias de no investigar}
-\textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
+Si esta falta de evidencia persiste, es probable que los proyectos de software sigan eligiendo formatos de archivo sin un criterio técnico claro, con el riesgo de sufrir caídas en el sistema, respuestas lentas o un consumo excesivo de memoria y CPU. Cada proyecto que se desarrolle sin estas mediciones es, previsiblemente, un sistema expuesto a fallar cuando reciba muchos usuarios, obligando al equipo a realizar correcciones costosas en producción que pudieron evitarse desde la fase de diseño.
 
 \subsection{Delimitación}
 \textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
