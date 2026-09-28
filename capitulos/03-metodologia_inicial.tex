@@ -1,9 +1,41 @@
 
 \section{ALCANCE DE LA INVESTIGACIÓN}
-\textit{En construcción.} Sección incorporada según Hernández-Sampieri (tipo de estudio: exploratorio, descriptivo, correlacional o explicativo) — no aparece como título propio en la NTC 1486. Se redacta en la Fase 3.
+
+Este estudio es de carácter **explicativo**, ya que busca determinar si la estructura sintáctica de un formato de archivo procesado mediante el modelo basado en árbol (DOM) (causa) produce diferencias estadísticamente significativas en el tiempo de procesamiento y en el consumo de memoria RAM (efectos), al comparar tres condiciones experimentales (CSV, JSON y XML) en un entorno de laboratorio controlado.
+
+\subsection{Limitaciones de la investigación}
+
+\begin{itemize}
+    \item \textbf{Modelo de parseo:} Al enfocar el estudio exclusivamente en el modelo basado en árbol (DOM), las conclusiones y generalizaciones no aplican a escenarios de procesamiento secuencial o por flujos (\textit{streaming} como SAX, StAX o Jackson Streaming).
+    \item \textbf{Entorno de ejecución JVM:} La recolección de métricas de memoria está condicionada a la arquitectura de la Máquina Virtual de Java y al comportamiento del recolector de basura (\textit{Garbage Collector}), por lo que los valores absolutos pueden presentar ligeras variaciones al cambiar de entorno de ejecución.
+    \item \textbf{Infraestructura de hardware:} Los experimentos se realizan sobre un equipo con arquitectura, procesador y memoria RAM fijos. Los resultados numéricos exactos reflejan el comportamiento en esa infraestructura, aunque las proporciones y diferencias relativas entre formatos mantienen su validez científica y replicabilidad.
+\end{itemize}
 
 \section{FORMULACIÓN DE HIPÓTESIS}
-\textit{En construcción.} Sección incorporada según Hernández-Sampieri, Tamayo y Tamayo y Bernal — no aparece como título propio en la NTC 1486. Se redacta en la Fase 3.
+
+A partir de la pregunta de investigación y los objetivos planteados, se formulan las siguientes hipótesis estadísticas:
+
+\subsection{Hipótesis sobre tiempo de procesamiento}
+
+\begin{itemize}
+    \item \textbf{$H_{1a}$ (Hipótesis de trabajo):} Los archivos en formato CSV procesados mediante el modelo DOM presentan un tiempo de procesamiento (lectura y construcción en memoria) menor que los formatos JSON y XML para volúmenes de datos equivalentes.
+    \item \textbf{$H_{0a}$ (Hipótesis nula):} No existe diferencia estadísticamente significativa en el tiempo de procesamiento mediante el modelo DOM entre los formatos CSV, JSON y XML.
+\end{itemize}
+
+\subsection{Hipótesis sobre consumo de memoria RAM}
+
+\begin{itemize}
+    \item \textbf{$H_{1b}$ (Hipótesis de trabajo):} Los archivos en formato XML procesados mediante el modelo DOM presentan un consumo de memoria RAM significativamente mayor que los formatos JSON y CSV para un mismo volumen de datos equivalentes.
+    \item \textbf{$H_{0b}$ (Hipótesis nula):} No existe diferencia estadísticamente significativa en el consumo de memoria RAM entre el procesamiento de archivos CSV, JSON y XML utilizando el modelo DOM.
+\end{itemize}
 
 \section{VARIABLES}
-\textit{En construcción.} Definición nominal/conceptual en la Fase 3; operacionalización completa en la Fase 5.
+
+Las hipótesis formuladas relacionan las siguientes variables, clasificadas y definidas conceptualmente (su operacionalización detallada se completará en la Fase 5):
+
+\begin{itemize}
+    \item \textbf{Formato de archivo bajo modelo DOM (Variable Independiente):} Estructura sintáctica de representación de datos (CSV, JSON o XML) que es parseada mediante la instanciación completa de sus nodos y atributos en un árbol de objetos navegable en memoria RAM.
+    \item \textbf{Tiempo de procesamiento (Variable Dependiente 1):} Intervalo de tiempo, medido en milisegundos (ms), transcurrido desde el inicio de la lectura del archivo en almacenamiento secundario hasta la finalización de la construcción del árbol DOM en memoria principal.
+    \item \textbf{Consumo de memoria RAM (Variable Dependiente 2):} Cantidad de memoria principal, medida en megabytes (MB), reservada y retenida por el runtime durante y posterior a la instanciación del objeto DOM (evaluando el pico máximo y el uso sostenido).
+    \item \textbf{Arquitectura del entorno de pruebas (Variable Interviniente / Controlada):} Conjunto de especificaciones técnicas del hardware (CPU, velocidad de disco SSD) y configuración de la JVM (Heap Size, parámetros de ejecución) que se mantienen constantes durante todas las ejecuciones experimentales.
+\end{itemize}
