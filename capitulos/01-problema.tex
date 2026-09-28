@@ -28,7 +28,19 @@ Como se documentó en los antecedentes [ver 1.1], los formatos CSV, JSON y XML s
 Actualmente no existe un análisis comparativo y experimental sobre el rendimiento real de estos tres formatos —en tiempos de lectura, escritura, consumo de memoria RAM, uso de CPU y latencia bajo distintas estrategias de carga— en escenarios de alta demanda. Esta falta de evidencia afecta directamente a los desarrolladores y arquitectos de software, y obliga a que la elección del formato de archivo para un proyecto se tome por intuición o por costumbre, sin conocer sus verdaderos límites técnicos.
 
 \subsection{Formulación del problema}
-\textit{En construcción.} Se redacta cuando se libere el tema correspondiente en el Curso.
+
+A partir del planteamiento anterior, la pregunta de investigación que orienta este estudio es:
+
+¿Qué efecto tiene el procesamiento mediante la carga completa en memoria utilizando el modelo basado en árbol (DOM) (variable independiente) sobre los tiempos de ejecución y el consumo de memoria RAM (variables dependientes) al parsear e inspeccionar archivos de formato CSV, JSON y XML con volúmenes de datos controlados en una arquitectura computacional estandarizada?
+
+Esta pregunta se sistematiza en las siguientes sub-preguntas:
+\begin{enumerate}
+    \item[a)] ¿Cómo influye la estructura sintáctica del modelo DOM en el tiempo de procesamiento (lectura del archivo y construcción del árbol en memoria) de archivos CSV, JSON y XML bajo volúmenes de datos equivalentes?
+    \item[b)] ¿Qué efecto produce la sobrecarga de instanciación de nodos del modelo DOM en el consumo de memoria RAM según la sintaxis y el nivel de anidamiento de cada formato?
+    \item[c)] ¿Existen diferencias en el tamaño y la estructura inicial de los archivos CSV, JSON y XML que deban medirse primero para no confundir el peso de sus etiquetas con fallos de rendimiento?
+\end{enumerate}
+
+El proyecto se aborda mediante un diseño experimental cuantitativo bajo un entorno computacional de pruebas estandarizado, lo que permite aislar las variables intervinientes y determinar la causalidad directa entre la sintaxis del formato y el impacto físico en el hardware.
 
 \subsection{Consecuencias de no investigar}
 Si esta falta de evidencia persiste, es probable que los proyectos de software sigan eligiendo formatos de archivo sin un criterio técnico claro, con el riesgo de sufrir caídas en el sistema, respuestas lentas o un consumo excesivo de memoria y CPU. Cada proyecto que se desarrolle sin estas mediciones es, previsiblemente, un sistema expuesto a fallar cuando reciba muchos usuarios, obligando al equipo a realizar correcciones costosas en producción que pudieron evitarse desde la fase de diseño.

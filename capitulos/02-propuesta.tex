@@ -1,0 +1,32 @@
+\section{JUSTIFICACIÓN}
+
+Este estudio mide de forma comparativa y experimental cómo la instanciación completa en memoria mediante el modelo basado en árbol (DOM) afecta el tiempo de procesamiento y el consumo de memoria RAM al manipular archivos CSV, JSON y XML, en un contexto donde los desarrolladores y arquitectos de software carecen de evidencia local sobre el sobrecosto real de estas decisiones técnicas.
+
+Es necesario investigar esta problemática en la actualidad porque las decisiones sobre qué formato de archivo e interfaz de parseo implementar en los proyectos se continúan tomando por intuición o costumbre. Cada sistema expuesto a cargas de datos crecientes sin esta evidencia técnica representa un desarrollo vulnerable a cuellos de botella y fallos en entorno de producción, obligando a realizar refactorizaciones o gastos de infraestructura evitables.
+
+Este trabajo se justifica formalmente en tres dimensiones:
+\begin{itemize}
+    \item \textbf{Dimensión teórica:} Aporta evidencia empírica sobre la relación entre el sobrecosto sintáctico (\textit{syntactic overhead}) de tres formatos de persistencia estructuralmente distintos (CSV, JSON y XML) y la huella de memoria (\textit{memory footprint}) resultante de su transformación a un árbol de objetos en memoria (DOM), abordando un fenómeno poco medido de manera aislada frente a volúmenes de datos equivalentes.
+    \item \textbf{Dimensión práctica:} Proporciona a desarrolladores y arquitectos de software métricas locales y criterios cuantitativos de selección para determinar en qué escenarios es viable y eficiente la manipulación en memoria mediante el modelo DOM, y en cuáles su sobrecosto exige migraciones tempranas hacia otras estrategias de procesamiento.
+    \item \textbf{Dimensión metodológica:} El entorno de pruebas (\textit{test bench}) automatizado y el protocolo de recolección de métricas de tiempo y memoria en la Máquina Virtual de Java (JVM), validados en este estudio, quedan disponibles para ser replicados en otros proyectos con nuevos formatos de archivo, volúmenes de datos o plataformas de ejecución.
+\end{itemize}
+
+El proyecto se aborda mediante un diseño experimental cuantitativo bajo un entorno computacional de pruebas estandarizado, lo que permite aislar las variables intervinientes y determinar la causalidad directa entre la sintaxis del formato y el impacto físico en el hardware.
+
+\section{OBJETIVOS}
+
+\subsection{Objetivo general}
+
+Contribuir a que los proyectos de desarrollo de software seleccionen e implementen formatos de archivos estructurados (CSV, JSON y XML) bajo el modelo basado en árbol (DOM) de manera que se aproveche la flexibilidad de manipulación en memoria, sin comprometer la memoria RAM del sistema ni elevar ineficientemente los tiempos de procesamiento.
+
+\subsection{Objetivos específicos y metas}
+
+\begin{enumerate}
+    \item[a)] \textbf{OE1 — Peso y estructura original de los archivos:} Medir el tamaño en disco y la cantidad de elementos de los archivos CSV, JSON y XML antes de cargarlos en memoria, para determinar cuánto texto extra agrega cada formato. \textit{Meta:} perfil del peso (en bytes) y número de elementos de una muestra de 9 archivos de prueba distribuidos en 3 tamaños de datos.
+    
+    \item[b)] \textbf{OE2 — Medición del tiempo de procesamiento:} Registrar cuánto tarda la computadora en leer el archivo y construir la estructura en la memoria RAM para los tres formatos en un entorno controlado. \textit{Meta:} tiempo promedio de procesamiento en milisegundos (ms) por formato y tamaño, obtenido tras 30 repeticiones por escenario.
+    
+    \item[c)] \textbf{OE3 — Medición del consumo de memoria RAM:} Evaluar cuánta memoria RAM consume la computadora al cargar y mantener la estructura en memoria para CSV, JSON y XML. \textit{Meta:} consumo promedio de memoria RAM (pico máximo y uso continuo en MB), medido durante las mismas 30 repeticiones.
+    
+    \item[d)] \textbf{OE4 — Comparación y conclusiones:} Cruzar los datos de tiempo y memoria RAM de los tres formatos para determinar cuál es más eficiente y verificar cómo afecta el peso de las etiquetas al rendimiento. \textit{Meta:} matriz comparativa final y análisis estadístico entre CSV, JSON y XML.
+\end{enumerate}
