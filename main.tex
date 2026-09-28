@@ -9,6 +9,8 @@
 \renewcommand{\familydefault}{\sfdefault} % Fuente Arial estándar NTC
 \usepackage{setspace}
 \onehalfspacing % Interlineado 1.5
+\setlength{\parindent}{0pt} % Elimina la sangría al inicio de cada párrafo
+\setlength{\parskip}{1em}   % Espacio vertical entre párrafos
 
 % --- PAQUETES DE TABLAS Y FIGURAS ---
 \usepackage{graphicx}
@@ -50,6 +52,10 @@
 
 % 2. CUERPO DEL DOCUMENTO
 \input{capitulos/01-problema}
+\newpage
+\input{capitulos/02-propuesta}
+\newpage
+\input{capitulos/03-metodologia_inicial}
 \newpage
 \input{capitulos/02-secciones_futuras}
 \newpage
