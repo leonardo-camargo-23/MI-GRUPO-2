@@ -1,0 +1,54 @@
+\section{MARCO REFERENCIAL}
+
+\subsection{Marco histórico}
+
+La problemática del sobrecosto computacional al procesar archivos estructurados en memoria responde a la evolución de los estándares de intercambio de datos y de los mecanismos diseñados para su navegación programática. Durante las últimas cuatro décadas, el diseño de formatos textuales transitó desde estructuras tabulares simples hacia representaciones jerárquicas autodescriptivas, priorizando inicialmente la interoperabilidad y la legibilidad sobre la eficiencia en memoria principal:
+
+\begin{enumerate}
+    \item \textbf{Representación tabular delimitada (década de 1970 a 2005).} El formato CSV (\textit{Comma-Separated Values}) surgió en los primeros sistemas de procesamiento por lotes y hojas de cálculo para almacenar registros planos separados por comas y saltos de línea, sin metadatos ni jerarquía interna. Tras décadas de uso empírico, la \textit{Internet Engineering Task Force} (IETF) documentó su gramática y tipo MIME (\texttt{text/csv}) en el estándar informativo RFC 4180 \cite{shafranovich2005}.
+    \item \textbf{Estándar jerárquico basado en etiquetas y origen del modelo DOM (1998 a 2004).} Con la expansión de la Web y el intercambio empresarial de datos heterogéneos, el \textit{World Wide Web Consortium} (W3C) publicó en 1998 la especificación XML 1.0 (\textit{Extensible Markup Language}) \cite{bray1998}, derivada de SGML, introduciendo etiquetas de apertura y cierre anidadas. De forma paralela, el W3C formalizó el \textit{Document Object Model} (DOM), consolidado en su especificación \textit{DOM Level 3 Core} en 2004 \cite{w3cdom2004}, estableciendo una interfaz estándar independiente del lenguaje para cargar documentos completos en memoria RAM como un árbol navegable de nodos.
+    \item \textbf{Serialización ligera orientada a objetos (2001 a 2017).} Frente a la verbosidad sintáctica de XML, a comienzos de la década de 2000 apareció JSON (\textit{JavaScript Object Notation}) como una alternativa textual compacta basada en pares clave-valor y arreglos, estandarizada por la IETF en el RFC 8259 \cite{bray2017}. Aunque JSON redujo la cantidad de caracteres frente a las etiquetas de cierre de XML, las implementaciones habituales mantuvieron la materialización completa en árbol de objetos en memoria para facilitar su consulta directa.
+    \item \textbf{Transición hacia la optimización de memoria (2021 a la actualidad).} A partir de 2021, el aumento en el volumen de registros intercambiados entre servicios y el despliegue de aplicaciones sobre entornos con memoria acotada, como contenedores y máquinas virtuales configuradas con límites estrictos de \textit{Heap}, desplazaron el enfoque técnico desde la interoperabilidad hacia el costo físico del análisis sintáctico (\textit{parsing}) y la huella de memoria en tiempo de ejecución \cite{ieee_les_2024, maltsev2024}.
+\end{enumerate}
+
+Este último hito marca el punto de corte temporal donde inicia la revisión de literatura reciente (2021--2026) presentada en el estado del arte.
+
+\subsection{Estado del arte}
+
+Para identificar cómo la literatura científica reciente (ventana 2021--2026) ha evaluado el rendimiento computacional del procesamiento de archivos estructurados y delimitar el vacío empírico que aborda este trabajo, se aplicó una versión adaptada del protocolo PRISMA (\textit{Preferred Reporting Items for Systematic Reviews and Meta-Analyses}) \cite{page2021}.
+
+\subsubsection{Protocolo de búsqueda y selección}
+
+Se efectuaron búsquedas en IEEE Xplore, ACM Digital Library, ScienceDirect y Google Scholar mediante la cadena: \texttt{("CSV" OR "JSON" OR "XML") AND ("DOM" OR "parsing" OR "serialization") AND ("memory" OR "performance" OR "JVM")}.
+
+Se definieron cinco criterios de exclusión previos: (a) registros duplicados entre bases de datos; (b) publicaciones anteriores a 2021, exceptuando especificaciones técnicas o estudios seminales de referencia; (c) documentos sin revisión por pares; (d) estudios centrados exclusivamente en formatos binarios (como Protocol Buffers o FlatBuffers) sin comparación frente a formatos textuales; y (e) investigaciones enfocadas únicamente en latencia de red o sistemas distribuidos sin métricas locales de procesamiento o memoria RAM. El proceso de selección se detalla en la Tabla \ref{tab:prisma}.
+
+\begin{table}[htbp]
+\centering
+\caption{Resumen del embudo de selección de literatura bajo protocolo PRISMA adaptado.}
+\label{tab:prisma}
+\begin{tabularx}{\textwidth}{p{5.5cm} c X}
+\toprule
+\textbf{Fase del protocolo} & \textbf{Registros} & \textbf{Criterio aplicado / Descarte} \\
+\midrule
+1. Identificación en bases de datos & 64 & Búsqueda inicial en IEEE, ACM, ScienceDirect y Scholar. \\
+2. Eliminación de duplicados & 48 & Se excluyen 16 registros duplicados. \\
+3. Cribado por título y resumen & 19 & Se excluyen 29 estudios (fuera de ventana temporal, sin revisión por pares o solo enfoque de red). \\
+4. Elegibilidad (texto completo) & 8 & Se excluyen 11 artículos (sin métricas comparables de memoria/tiempo o sin análisis estructural). \\
+\midrule
+\textbf{Estudios incluidos en síntesis} & \textbf{8} & Base empírica reciente (2021--2026) analizada por sub-pregunta. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Síntesis comparativa por sub-preguntas}
+
+Los ocho estudios seleccionados se agruparon según las tres sub-preguntas definidas en la Sección 1.3:
+
+En relación con la sub-pregunta (a), sobre la influencia de la estructura sintáctica en el tiempo de procesamiento, la literatura reciente coincide en que la complejidad gramatical de los formatos jerárquicos incrementa la latencia de deserialización frente a las estructuras tabulares. Maltsev y Amin \cite{maltsev2024} comprobaron en pruebas comparativas de serialización que el procesamiento de formatos textuales con validación secuencial y conversión dinámica de tipos, como JSON, genera cuellos de botella en la CPU. De manera concordante, las evaluaciones comparativas entre XML y JSON en sistemas de recursos limitados evidencian tiempos de ejecución superiores en XML debido al procesamiento doble de etiquetas de apertura y cierre \cite{ieee_les_2024}. Asimismo, estudios sobre motores de ingestión de datos señalan que los registros delimitados tipo CSV permiten escaneos lineales rápidos \cite{langdale2019}, mientras que los documentos basados en árboles requieren fases adicionales de construcción de nodos que elevan la latencia \cite{ieee_icoailo_2025}. Sin embargo, la mayoría de estos trabajos evalúan transmisión entre microservicios, algoritmos vectorizados en C++ o ejecución paralela, dejando sin aislar el tiempo de lectura e instanciación monohilo bajo el modelo DOM estándar en la JVM para cargas equivalentes de CSV, JSON y XML.
+
+Respecto a la sub-pregunta (b), sobre el efecto de la instanciación de nodos en el consumo de memoria RAM, los trabajos revisados confirman que materializar un árbol completo en memoria expande considerablemente la ocupación respecto al tamaño del archivo en disco. Las evaluaciones sobre estándares de almacenamiento estructurado indican que las representaciones en árbol replican metadatos estructurales y punteros por cada nodo instanciado, incrementando la huella de memoria (\textit{memory footprint}) \cite{ieee_les_2024}. Por su parte, Maltsev y Muliarevych \cite{maltsev2024b} analizaron el costo espacial de distintos formatos de serialización y advirtieron que los analizadores que construyen árboles de objetos en entornos administrados provocan asignaciones continuas en el espacio de memoria dinámica (\textit{Heap}). No obstante, las mediciones reportadas suelen registrar únicamente el consumo global del proceso o el tamaño del mensaje serializado, sin separar experimentalmente el pico máximo de memoria RAM alcanzado durante el análisis sintáctico de la memoria retenida una vez estabilizado el árbol DOM en Java.
+
+Frente a la sub-pregunta (c), sobre las diferencias previas en peso y estructura inicial de los archivos, las mediciones comparativas entre formatos textuales determinaron que un mismo conjunto de datos representado en JSON ocupa cerca de un $24{,}7\%$ menos de espacio en disco que su equivalente en XML al prescindir de etiquetas de cierre redundantes \cite{ieee_les_2024}. De igual forma, las comparaciones de estándares de intercambio de datos muestran que CSV presenta la menor densidad estructural al omitir la repetición de nombres de atributos por registro \cite{ieee_icoailo_2025}. A pesar de documentar las diferencias de peso en almacenamiento secundario, estos antecedentes no cruzan el tamaño bruto inicial en bytes de los tres formatos con su factor de expansión en megabytes al ser instanciados mediante el modelo DOM bajo un volumen de datos equivalente.
+
+Los vacíos identificados confirman la pertinencia de la pregunta de investigación y sustentan la necesidad de un experimento controlado que aísle el modelo DOM monohilo en la JVM y relacione el peso sintáctico inicial con el tiempo de ejecución y la memoria pico y retenida.
