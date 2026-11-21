@@ -5,6 +5,7 @@
 \usepackage[top=3cm, bottom=3cm, left=4cm, right=2cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish, es-tabla]{babel}
+\usepackage{csquotes}
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault} % Fuente Arial estándar NTC
 \usepackage{setspace}
@@ -12,9 +13,11 @@
 \setlength{\parindent}{0pt} % Elimina la sangría al inicio de cada párrafo
 \setlength{\parskip}{1em}   % Espacio vertical entre párrafos
 
-% --- PAQUETES DE TABLAS Y FIGURAS ---
+% --- PAQUETES DE MATEMÁTICAS, TABLAS Y FIGURAS ---
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{caption}
 \captionsetup{labelsep=period, font=small}
 
@@ -56,6 +59,10 @@
 \input{capitulos/02-propuesta}
 \newpage
 \input{capitulos/03-metodologia_inicial}
+\newpage
+\input{capitulos/capitulo7}
+\newpage
+\input{capitulos/capitulo8}
 \newpage
 \input{capitulos/02-secciones_futuras}
 \newpage
