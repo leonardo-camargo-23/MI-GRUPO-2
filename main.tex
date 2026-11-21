@@ -4,6 +4,7 @@
 % --- MÁRGENES Y FORMATO ICONTEC (NTC 1486) ---
 \usepackage[top=3cm, bottom=3cm, left=4cm, right=2cm]{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[spanish, es-tabla]{babel}
 \usepackage{csquotes}
 \usepackage{helvet}
@@ -17,12 +18,13 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{tabularx}
 \usepackage{caption}
 \captionsetup{labelsep=period, font=small}
 
 % --- BIBLIOGRAFÍA EN ESTILO IEEE ---
-\usepackage[backend=biber, style=ieee]{biblatex}
+\usepackage[backend=bibtex, style=ieee]{biblatex}
 \addbibresource{referencias.bib}
 
 % --- HIPERVÍNCULOS ---
@@ -54,6 +56,8 @@
 \newpage
 
 % 2. CUERPO DEL DOCUMENTO
+\input{capitulos/00-resumen_intro}
+\newpage
 \input{capitulos/01-problema}
 \newpage
 \input{capitulos/02-propuesta}
@@ -64,7 +68,9 @@
 \newpage
 \input{capitulos/capitulo8}
 \newpage
-\input{capitulos/02-secciones_futuras}
+\input{capitulos/capitulo9}
+\newpage
+\input{capitulos/capitulo10}
 \newpage
 
 % 3. REFERENCIAS BIBLIOGRÁFICAS (Estilo IEEE)

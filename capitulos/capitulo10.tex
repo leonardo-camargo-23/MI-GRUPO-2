@@ -1,0 +1,32 @@
+% ==============================================================================
+% CAPÍTULO 10: CONCLUSIONES Y RECOMENDACIONES
+% ==============================================================================
+\section{CONCLUSIONES Y RECOMENDACIONES}
+
+\subsection{Conclusiones}
+
+\begin{itemize}
+    \item \textbf{Sobre el objetivo específico 1 (peso y estructura original de los archivos):} La verbosidad sintáctica incrementa el tamaño físico en disco antes de cualquier procesamiento en memoria; para una carga semántica equivalente de $325\,000$ registros anidados, XML ($95.97\text{ MB}$) cuadruplicó el peso de CSV ($23.45\text{ MB}$) y superó en $46.3\%$ el de JSON ($65.60\text{ MB}$), mientras que el anidamiento jerárquico no alteró el peso del formato tabular.
+
+    \item \textbf{Sobre el objetivo específico 2 (medición del tiempo de procesamiento):} CSV registró tiempos de lectura y materialización significativamente menores que JSON y XML en todos los volúmenes y estructuras ($p < 10^{-15}$); en el escenario crítico de $50\text{ MB}$ anidados, XML ($1\,684.39\text{ ms}$) resultó $6.81$ veces más lento que CSV ($247.39\text{ ms}$) y $2.12$ veces más lento que JSON ($794.65\text{ ms}$).
+
+    \item \textbf{Sobre el objetivo específico 3 (medición del consumo de memoria RAM):} XML presentó el mayor consumo de memoria Heap pico y retenida ($827.57\text{ MB}$ y $629.64\text{ MB}$ en $50\text{ MB}$ anidados, frente a $166.89\text{ MB}$ retenidos en CSV), exhibiendo una huella espacial determinista ($\text{DE} < 0.43\text{ MB}$) y una alta sensibilidad a la profundidad jerárquica en los formatos arbóreos, donde el anidamiento elevó la memoria retenida en $42.5\%$ para JSON y $8.1\%$ para XML.
+
+    \item \textbf{Sobre el objetivo específico 4 (comparación y eficiencia global):} El cruce estadístico confirma el orden estricto de eficiencia computacional $\text{CSV} > \text{JSON} > \text{XML}$ bajo carga completa en memoria; aunque JSON plano mantiene el menor factor de expansión espacial ($\alpha \approx 5.33\times$), al incorporar anidamiento su factor asciende a $6.59\times$, igualando proporcionalmente la expansión de XML anidado ($6.56\times$).
+
+    \item \textbf{Sobre el objetivo general:} Se cumplió el propósito de establecer criterios cuantitativos de selección, rechazando las hipótesis nulas $H_{0a}$ y $H_{0b}$ ($p < 10^{-14}$) con tamaños del efecto grandes ($\epsilon^{2} \ge 0.886$ y $\eta^{2} = 0.990$), lo que demuestra que el formato de serialización explica más del $88\%$ de la varianza en latencia y memoria Heap bajo materialización completa en la JVM.
+\end{itemize}
+
+\subsection{Recomendaciones}
+
+\begin{itemize}
+    \item \textbf{Selección de formato según arquitectura de datos:} Utilizar CSV en procesos de ingesta masiva o intercambio tabular homogéneo donde el bajo consumo de Heap y la velocidad de análisis sean prioritarios; emplear JSON (\texttt{JsonNode}) para cargas jerárquicas de mediana escala ($< 10\text{ MB}$) que requieran navegación aleatoria, y restringir XML con DOM nativo a flujos heredados o validación estricta mediante esquemas XSD de volumen acotado.
+    \item \textbf{Dimensionamiento preventivo del Heap en la JVM:} Asignar un espacio de memoria dinámica libre equivalente al menos a $8.5$ veces el tamaño del archivo en disco cuando se procesen documentos JSON o XML mediante modelos de árbol completo, cubriendo tanto la retención estructural ($\alpha \approx 6.6\times$) como los picos transitorios de instanciación léxico-sintáctica.
+\end{itemize}
+
+\subsection{Trabajo futuro}
+
+\begin{itemize}
+    \item \textbf{Contraste con analizadores por flujo de eventos (streaming):} Superar la delimitación exclusiva al paradigma de carga completa en memoria evaluando interfaces secuenciales de bajo consumo como StAX para XML y \texttt{JsonParser} para JSON sobre archivos superiores a $500\text{ MB}$.
+    \item \textbf{Evaluación en entornos concurrentes y esquemas heterogéneos:} Ampliar el protocolo experimental hacia escenarios multihilo, recolectores de basura de baja latencia (ZGC y Shenandoah) y conjuntos de datos con alta irregularidad estructural para fortalecer la validez externa en sistemas de producción distribuidos.
+\end{itemize}
