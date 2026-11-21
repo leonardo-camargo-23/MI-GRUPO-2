@@ -1,0 +1,75 @@
+\section{DISEÑO METODOLÓGICO Y EXPERIMENTAL}
+
+A partir del marco referencial establecido en el capítulo anterior, se define el plan de trabajo para medir y comparar el tiempo de procesamiento y el consumo de memoria RAM de los formatos CSV, JSON y XML. Las pruebas se ejecutan bajo el modelo DOM en un entorno monohilo dentro de la Máquina Virtual de Java (JVM) \cite{w3cdom2004, oracle_jvm_spec}.
+
+\subsection{Diseño de la investigación}
+
+El proyecto sigue un \textbf{diseño experimental puro de corte transversal}. En este estudio se manipulan de forma controlada las variables independientes ---el formato del archivo (CSV, JSON y XML), la estructura de los datos (plana y anidada) y el tamaño de carga--- sobre archivos sintéticos generados con una semilla aleatoria fija (\texttt{Random(42)}), midiendo los resultados en un único momento de ejecución dentro de un entorno aislado.
+
+Se eligió el diseño \textbf{experimental puro} y se descartó el \textbf{cuasi-experimental} porque los archivos de prueba no son grupos ya existentes sin control, sino que se crean y someten exactamente a las mismas condiciones de laboratorio. También se descartó un diseño \textbf{no experimental}, ya que el alcance explicativo del trabajo requiere modificar los formatos y tamaños para comprobar su efecto directo sobre el tiempo de lectura y el uso de memoria.
+
+\subsection{Matriz de operacionalización de variables}
+
+Tomando las variables definidas en el planteamiento del problema, la Tabla~\ref{tab:operacionalizacion} detalla cómo se mide cada una, qué herramienta de Java se utiliza, su escala y su unidad de registro.
+
+\begin{table}[htbp]
+\centering
+\caption{Matriz de operacionalización de variables del estudio.}
+\label{tab:operacionalizacion}
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{2.0cm}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Indicador} & \textbf{Instrumento} & \textbf{Escala} & \textbf{Unidad} \\
+\midrule
+Formato de serialización & Independiente & Tipo de sintaxis asignada al archivo de prueba & Generador sintético en Java & Nominal & CSV / JSON / XML \\
+\midrule
+Complejidad estructural & Independiente & Nivel de anidamiento del esquema de datos & Generador sintético en Java & Ordinal & Plano (1 nivel) / Anidado (3 niveles) \\
+\midrule
+Volumen de carga & Independiente & Tamaño objetivo del archivo generado en disco & Generador sintético en Java & De razón & Megabytes (MB): 1, 10, 50 \\
+\midrule
+Tiempo de procesamiento & Dependiente & Tiempo desde la lectura inicial hasta crear el árbol DOM & Reloj de Java (\texttt{System.nanoTime()}) & De razón & Milisegundos (ms) \\
+\midrule
+Memoria RAM pico & Dependiente & Consumo máximo de memoria \textit{Heap} durante el parseo & JDK Flight Recorder / \texttt{MemoryMXBean} & De razón & Megabytes (MB) \\
+\midrule
+Memoria RAM retenida & Dependiente & Memoria \textit{Heap} ocupada tras liberar objetos temporales & JDK Flight Recorder / \texttt{MemoryMXBean} & De razón & Megabytes (MB) \\
+\midrule
+Peso sintáctico inicial & Dependiente & Tamaño físico real del archivo en disco & API de archivos (\texttt{Files.size()}) & De razón & Megabytes (MB) \\
+\midrule
+Entorno de ejecución & Interviniente (controlada) & Versión de JDK, límite de memoria y un solo hilo & Script de configuración JVM & Nominal & Configuración fija (1 hilo) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Protocolo experimental y amenazas a la validez}
+
+Para asegurar que las pruebas puedan repetirse y que factores externos no alteren las mediciones, se sigue este procedimiento en cuatro pasos:
+
+\begin{enumerate}
+    \item \textbf{Control del entorno:} Todas las corridas se hacen en el mismo equipo, cerrando programas secundarios, dejando el procesador en modo de alto rendimiento y fijando la misma versión de JDK y límites de memoria (\texttt{-Xms} y \texttt{-Xmx}). Todo corre en un solo hilo de ejecución.
+    \item \textbf{Grupo de comparación y formatos evaluados:} El formato tabular \textbf{CSV} \cite{shafranovich2005} sirve como referencia base frente a los formatos jerárquicos \textbf{JSON} \cite{bray2017} y \textbf{XML} \cite{bray1998}. Se usan librerías estándar de Java que cargan todo el documento en memoria: \texttt{DocumentBuilder} (DOM nativo) para XML, \texttt{JsonNode} (Jackson) para JSON y una lista indexada de registros en memoria para CSV.
+    \item \textbf{Calentamiento y repeticiones:} Antes de medir cada caso, se hacen 5 ejecuciones de calentamiento (\textit{warm-up}) que se descartan para estabilizar la compilación interna de Java (JIT). Luego se realizan \textbf{30 repeticiones válidas} por escenario, liberando la memoria entre cada prueba.
+    \item \textbf{Registro de datos:} En cada repetición válida el programa guarda automáticamente el peso del archivo en disco, el tiempo de procesamiento, la memoria pico y la memoria retenida.
+\end{enumerate}
+
+\textbf{Amenazas a la validez:} Como amenaza a la \textit{validez interna}, las pausas automáticas del recolector de basura de Java o tareas internas del sistema operativo pueden generar variaciones puntuales en los tiempos; esto se controla con el calentamiento previo, el cierre de aplicaciones y el filtrado de valores atípicos mediante el rango intercuartílico (IQR) sobre las 30 repeticiones. Como amenaza a la \textit{validez externa}, los resultados aplican únicamente al modelo DOM en ejecución monohilo sobre Java, por lo que no deben generalizarse directamente a analizadores por flujo (como SAX o StAX), entornos multihilo ni a otros lenguajes.
+
+\subsection{Población, muestra y datasets}
+
+Como el estudio evalúa archivos y procesos de software en lugar de personas, la población y la muestra se definen sobre los conjuntos de datos de prueba:
+
+\begin{itemize}
+    \item \textbf{Población:} Todos los archivos de texto posibles estructurados en CSV, JSON y XML con esquemas planos o jerárquicos.
+    \item \textbf{Muestra (dataset sintético):} Se utiliza un \textbf{muestreo no probabilístico por cuotas}. Se genera un conjunto de archivos sintéticos con semilla fija (\texttt{Random(42)}) para que los tres formatos contengan exactamente los mismos registros. Al combinar 3 formatos (CSV, JSON, XML), 2 estructuras (plana de 1 nivel y anidada de 3 niveles) y 3 tamaños (1 MB, 10 MB y 50 MB), se obtienen \textbf{18 escenarios}.
+    \item \textbf{Unidad de análisis y tamaño muestral:} Cada ejecución individual de lectura y carga en memoria es una unidad de análisis. Al realizar 30 repeticiones válidas en cada uno de los 18 escenarios, se reúnen \textbf{540 mediciones en total}, cantidad suficiente para evaluar la normalidad de los datos (prueba de Shapiro-Wilk) y aplicar pruebas estadísticas de comparación (ANOVA o Kruskal-Wallis con $\alpha = 0{,}05$) en la siguiente fase.
+\end{itemize}
+
+\subsection{Técnicas, instrumentos y validación}
+
+La captura de información se realiza mediante \textbf{registro automático (bitácoras de ejecución)} dentro de una aplicación desarrollada en Java, evitando errores humanos de medición:
+
+\begin{itemize}
+    \item \textbf{Generador de archivos:} Programa en Java que crea los archivos CSV, JSON y XML con los mismos datos y verifica que su estructura sea válida antes de iniciar las pruebas.
+    \item \textbf{Módulo de medición:} Herramienta integrada en el código que mide el tiempo con \texttt{System.nanoTime()}, consulta el tamaño en disco con \texttt{Files.size()} y captura la memoria \textit{Heap} pico y retenida mediante \texttt{MemoryMXBean} y \textit{JDK Flight Recorder} (JFR) \cite{oracle_jvm_spec}, guardando todos los resultados en un archivo CSV.
+\end{itemize}
+
+\textbf{Validación y confiabilidad:} Para asegurar la \textit{validez}, las métricas siguen las definiciones de eficiencia de desempeño de la norma ISO/IEC 25010 \cite{iso25010} y la documentación oficial de memoria de la JVM \cite{oracle_jvm_spec}, verificando además que cada analizador cargue exactamente la misma cantidad de registros en memoria. Para comprobar la \textit{confiabilidad} del instrumento, se ejecutó una \textbf{prueba piloto} de 10 corridas con archivos de 1 MB, confirmando que no quedan residuos de memoria entre pruebas y que los tiempos mantienen una variación menor al 5 \% después del calentamiento.
