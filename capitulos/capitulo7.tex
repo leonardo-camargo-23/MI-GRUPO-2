@@ -52,3 +52,59 @@ Respecto a la sub-pregunta (b), sobre el efecto de la instanciación de nodos en
 Frente a la sub-pregunta (c), sobre las diferencias previas en peso y estructura inicial de los archivos, las mediciones comparativas entre formatos textuales determinaron que un mismo conjunto de datos representado en JSON ocupa cerca de un $24{,}7\%$ menos de espacio en disco que su equivalente en XML al prescindir de etiquetas de cierre redundantes \cite{ieee_les_2024}. De igual forma, las comparaciones de estándares de intercambio de datos muestran que CSV presenta la menor densidad estructural al omitir la repetición de nombres de atributos por registro \cite{ieee_icoailo_2025}. A pesar de documentar las diferencias de peso en almacenamiento secundario, estos antecedentes no cruzan el tamaño bruto inicial en bytes de los tres formatos con su factor de expansión en megabytes al ser instanciados mediante el modelo DOM bajo un volumen de datos equivalente.
 
 Los vacíos identificados confirman la pertinencia de la pregunta de investigación y sustentan la necesidad de un experimento controlado que aísle el modelo DOM monohilo en la JVM y relacione el peso sintáctico inicial con el tiempo de ejecución y la memoria pico y retenida.
+
+\subsection{Marco teórico}
+
+El análisis experimental del consumo de memoria y el tiempo de procesamiento en archivos estructurados se sustenta en la teoría de compiladores y en la arquitectura de gestión de memoria de la Máquina Virtual de Java (JVM).
+
+\subsubsection{Análisis léxico, sintáctico y modelo DOM}
+
+El procesamiento de cualquier formato textual sigue un flujo secuencial compuesto por tres etapas fundamentales \cite{ieee_parsing_2008}:
+
+\begin{enumerate}
+    \item \textbf{Análisis léxico (\textit{tokenization}).} El flujo de caracteres de entrada se divide en unidades mínimas con significado sintáctico (\textit{tokens}), tales como delimitadores, llaves, etiquetas o literales.
+    \item \textbf{Análisis sintáctico (\textit{parsing}).} Se verifica que la secuencia de \textit{tokens} cumpla con la gramática formal del formato (tabular en CSV, jerárquica clave-valor en JSON o anidada por etiquetas en XML) \cite{shafranovich2005, bray1998, bray2017}.
+    \item \textbf{Materialización en árbol (\textit{Document Object Model}).} Bajo el paradigma DOM definido por el W3C \cite{w3cdom2004}, el analizador no descarta los nodos tras leerlos, sino que instancia cada elemento, atributo y valor como un objeto residente en memoria principal, enlazado mediante punteros padre-hijo y hermano-hermano. Esta estructura habilita el acceso aleatorio de complejidad $O(1)$ o $O(\log n)$ sobre cualquier rama, a costa de mantener la totalidad del documento materializada en la RAM \cite{dke_memory_2006}.
+\end{enumerate}
+
+\subsubsection{Gestión de memoria en la JVM y factor de expansión}
+
+En el entorno de ejecución de Java, todos los objetos instanciados durante la construcción del árbol DOM se alojan en el área de memoria dinámica denominada \textit{Heap} \cite{oracle_jvm_spec}. Cada objeto en la JVM conlleva un sobrecosto estructural (\textit{object header}) de 12 a 16 bytes en arquitecturas de 64 bits, sumado al alineamiento de memoria (\textit{padding} a múltiplos de 8 bytes) y al tamaño de las referencias entre nodos \cite{oracle_jvm_spec}. En consecuencia, el tamaño ocupado en memoria principal ($M_{\text{RAM}}$) supera al tamaño físico del archivo en disco ($S_{\text{disco}}$), definiéndose el factor de expansión espacial ($\alpha$) como:
+
+\begin{equation}
+\alpha = \frac{M_{\text{RAM}}}{S_{\text{disco}}}
+\end{equation}
+
+Cuando la tasa de asignación de nodos supera la capacidad disponible del \textit{Heap}, se activan los ciclos de recolección de basura (\textit{Garbage Collection}, GC), introduciendo pausas en el hilo de ejecución que incrementan la latencia total de procesamiento \cite{dke_memory_2006, smith2002performance}.
+
+\subsection{Marco conceptual}
+
+Para garantizar precisión terminológica en el diseño experimental y en el análisis de resultados, se adoptan las siguientes definiciones operativas:
+
+\begin{itemize}
+    \item \textbf{Serialización y deserialización (\textit{parsing}):} Proceso de convertir estructuras de datos en memoria a una secuencia de caracteres almacenables (serialización) y la operación inversa de reconstruir estructuras navegables en memoria a partir del texto leído (deserialización).
+    \item \textbf{Modelo de árbol en memoria (DOM):} Paradigma de procesamiento que carga íntegramente un documento estructurado en la memoria RAM formando una jerarquía de nodos interconectados, permitiendo consultas y recorridos arbitrarios antes de liberar el recurso.
+    \item \textbf{Memoria RAM pico ($M_{\text{pico}}$):} Valor máximo de memoria dinámica (\textit{Heap}) ocupada durante el ciclo completo de lectura, análisis léxico-sintáctico e instanciación de nodos, incluyendo objetos temporales descartables.
+    \item \textbf{Memoria RAM retenida ($M_{\text{ret}}$):} Cantidad neta de memoria dinámica ocupada exclusivamente por la estructura de datos resultante una vez finalizada la carga y ejecutada la recolección de basura.
+    \item \textbf{Tiempo de procesamiento ($T_{\text{proc}}$):} Intervalo temporal transcurrido desde la apertura del flujo de lectura del archivo en disco hasta la disponibilidad completa de la estructura de nodos en memoria principal en un único hilo de ejecución.
+\end{itemize}
+
+\subsection{Marco normativo y técnico}
+
+El diseño del banco de pruebas y los criterios de evaluación se rigen por los siguientes estándares internacionales:
+
+\begin{itemize}
+    \item \textbf{ISO/IEC 25010 (Calidad del producto de software):} Define la característica de \textit{eficiencia de desempeño}, compuesta por las subcaracterísticas de comportamiento temporal (tiempos de respuesta y procesamiento) y utilización de recursos (cantidad y tipo de memoria empleada durante la ejecución).
+    \item \textbf{Estándares de sintaxis de datos:} Especificación IETF RFC 4180 para la delimitación de registros y campos en CSV \cite{shafranovich2005}; estándar IETF RFC 8259 para la gramática de objetos y arreglos en JSON \cite{bray2017}; y recomendaciones W3C XML 1.0 \cite{bray1998} junto con W3C DOM Level 3 Core \cite{w3cdom2004} para el árbol de nodos XML.
+\end{itemize}
+
+\subsection{Marco tecnológico}
+
+El entorno experimental se delimita al ecosistema de la Máquina Virtual de Java (JVM) ejecutada en modo estrictamente monohilo (\textit{single-threaded}) para aislar el costo algorítmico y espacial sin interferencia de sincronización concurrente:
+
+\begin{itemize}
+    \item \textbf{Analizador XML:} Implementación DOM estándar incorporada en la biblioteca nativa de Java mediante la API \texttt{javax.xml.parsers.DocumentBuilder}.
+    \item \textbf{Analizador JSON:} Biblioteca estándar de procesamiento JSON en Java (\textit{Jackson}), empleando su modelo de árbol completo (\texttt{ObjectMapper.readTree()} / \texttt{JsonNode}) equivalente al paradigma DOM.
+    \item \textbf{Analizador CSV:} Carga tabular completa en memoria mediante colecciones indexadas de registros y campos en Java, permitiendo acceso directo equivalente a la materialización integral de los formatos jerárquicos.
+    \item \textbf{Instrumentación de métricas:} Medición temporal mediante reloj monotónico de alta resolución (\texttt{System.nanoTime()}) y perfilado de memoria dinámica (\textit{Heap}) mediante la interfaz nativa \texttt{MemoryMXBean} y \textit{JDK Flight Recorder} (JFR).
+\end{itemize}
